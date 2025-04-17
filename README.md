@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TikTok Video Processing Workflow
 
-## Getting Started
+A Next.js application that processes TikTok videos through a node-based workflow, including:
 
-First, run the development server:
+1. TikTok video downloading and frame extraction
+2. Face swapping using PiAPI
+3. Video generation with Kling 2.0 model
+4. TikTok video lip syncing with Syncio API
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a `.env.local` file with the following variables:
+
+```
+PIAPI_KEY=your_piapi_key_here
+SYNCIO_API_KEY=your_syncio_api_key_here
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API Keys
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### PiAPI
+- Sign up at [app.piapi.ai](https://app.piapi.ai)
+- Navigate to Workspace > API Keys
+- Copy your API key and add it to the `.env.local` file
 
-## Learn More
+### Syncio
+- Sign up at [sync.so](https://sync.so)
+- Navigate to Dashboard > Developer > API Keys
+- Copy your API key and add it to the `.env.local` file
 
-To learn more about Next.js, take a look at the following resources:
+## How to Use
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application provides a node-based interface with four main nodes:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **TikTok Downloader**: Input a TikTok URL and extract frames
+2. **Face Swap**: Upload a face image to swap onto the extracted frames
+3. **Kling 2.0 Generator**: Generate videos from the face-swapped frames
+4. **Lip Sync**: Input a TikTok URL and audio URL to create a lip-synced video
 
-## Deploy on Vercel
+The first three nodes are connected in sequence, while the lip sync node operates independently.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technical Details
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 15 with React 19
+- ReactFlow for the node-based interface
+- yt-dlp for TikTok video downloading
+- ffmpeg for video processing
+- PiAPI for face swapping and video generation
+- Syncio API for lip syncing
+
+## Notes
+
+- Temporary files are stored in `/tmp/ugcv2` and linked to the public folder
+- This is a development build and not intended for production use
+- API rate limits may apply depending on your PiAPI and Syncio subscriptions
