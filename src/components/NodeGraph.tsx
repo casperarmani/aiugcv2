@@ -47,7 +47,7 @@ const initialNodes: Node[] = [
   {
     id: 'lipSync',
     type: 'lipSyncNode',
-    position: { x: 350, y: 400 },
+    position: { x: 900, y: 250 }, // Moved to the side
     data: { onSuccess: () => {} }, // Will be overwritten
   },
 ];
@@ -151,7 +151,7 @@ export default function NodeGraph() {
   }, [downloaderOutput, faceSwapOutput]);
   
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
+    <div style={{ width: '100%', height: 'calc(100vh - 100px)' }}>
       <ReactFlowProvider>
         <ReactFlow
           nodes={nodes}

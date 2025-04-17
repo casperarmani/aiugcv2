@@ -54,7 +54,7 @@ export function LipSyncNode({ id, data }: LipSyncNodeProps) {
   };
 
   return (
-    <div className="p-4 border rounded-lg bg-white shadow-md w-80">
+    <div className="p-4 border rounded-lg bg-white shadow-md w-80 text-black">
       <h3 className="text-lg font-semibold mb-2">Lip Sync</h3>
       
       <form onSubmit={handleSubmit}>
@@ -67,7 +67,7 @@ export function LipSyncNode({ id, data }: LipSyncNodeProps) {
             value={tiktokUrl}
             onChange={(e) => setTiktokUrl(e.target.value)}
             placeholder="https://www.tiktok.com/..."
-            className="w-full p-2 border rounded text-sm"
+            className="w-full p-2 border rounded text-sm text-black"
             required
           />
         </div>
@@ -81,7 +81,7 @@ export function LipSyncNode({ id, data }: LipSyncNodeProps) {
             value={audioUrl}
             onChange={(e) => setAudioUrl(e.target.value)}
             placeholder="https://example.com/audio.mp3"
-            className="w-full p-2 border rounded text-sm"
+            className="w-full p-2 border rounded text-sm text-black"
             required
           />
         </div>

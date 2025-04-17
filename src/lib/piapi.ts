@@ -1,9 +1,11 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import fs from 'fs';
+import fs from 'fs/promises';
+import path from 'path';
 
 // PiAPI endpoints
 const API_BASE_URL = 'https://app.piapi.ai/api/v2';
+const UPLOAD_HOST = 'https://upload.theapi.app';
 const API_KEY = process.env.PIAPI_KEY;
 
 /**
@@ -30,17 +32,24 @@ export const createTask = async (body: any): Promise<any> => {
  */
 export const uploadFile = async (filePath: string): Promise<string> => {
   try {
-    const formData = new FormData();
-    formData.append('file', fs.createReadStream(filePath));
+    // Read file as base64
+    const fileData = await fs.readFile(filePath);
+    const fileName = path.basename(filePath);
+    const base64Data = fileData.toString('base64');
     
-    const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+    // Use the new endpoint with JSON payload
+    const response = await axios.post(`${UPLOAD_HOST}/api/ephemeral_resource`, {
+      file_name: fileName,
+      file_data: base64Data
+    }, {
       headers: {
-        ...formData.getHeaders(),
-        'x-api-key': API_KEY,
-      },
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY
+      }
     });
     
-    return response.data.url;
+    // The response structure is different in the new API
+    return response.data.data.url;
   } catch (error) {
     console.error('Error uploading file to PiAPI:', error);
     throw new Error('Failed to upload file to PiAPI');

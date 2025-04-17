@@ -55,7 +55,7 @@ export function FaceSwapNode({ id, data }: FaceSwapNodeProps) {
   };
 
   return (
-    <div className="p-4 border rounded-lg bg-white shadow-md w-80">
+    <div className="p-4 border rounded-lg bg-white shadow-md w-80 text-black">
       <h3 className="text-lg font-semibold mb-2">Face Swap</h3>
       
       {data.inputData ? (
@@ -92,7 +92,7 @@ export function FaceSwapNode({ id, data }: FaceSwapNodeProps) {
             value={swapImageUrl}
             onChange={(e) => setSwapImageUrl(e.target.value)}
             placeholder="https://example.com/face.jpg"
-            className="w-full p-2 border rounded text-sm"
+            className="w-full p-2 border rounded text-sm text-black"
             required
           />
         </div>

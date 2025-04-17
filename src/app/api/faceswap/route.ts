@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { faceSwap } from '@/lib/piapi';
 import { getPublicUrl } from '@/lib/tiktok';
 import axios from 'axios';
-import fs from 'fs';
+import fs from 'fs/promises'; // Use the promise-based API
+import { existsSync, writeFileSync } from 'fs'; // For sync operations when needed
 import path from 'path';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,7 +15,7 @@ const downloadImage = async (url: string): Promise<string> => {
   const response = await axios.get(url, { responseType: 'arraybuffer' });
   const outputPath = path.join(TMP_DIR, `${uuidv4()}.jpg`);
   
-  fs.writeFileSync(outputPath, response.data);
+  await fs.writeFile(outputPath, response.data);
   
   return outputPath;
 };

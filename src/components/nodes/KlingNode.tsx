@@ -64,7 +64,7 @@ export function KlingNode({ id, data }: KlingNodeProps) {
   };
 
   return (
-    <div className="p-4 border rounded-lg bg-white shadow-md w-80">
+    <div className="p-4 border rounded-lg bg-white shadow-md w-80 text-black">
       <h3 className="text-lg font-semibold mb-2">Kling 2.0 Generator</h3>
       
       {data.inputData ? (
@@ -108,7 +108,7 @@ export function KlingNode({ id, data }: KlingNodeProps) {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Enter a detailed prompt..."
-            className="w-full p-2 border rounded text-sm"
+            className="w-full p-2 border rounded text-sm text-black"
             rows={3}
             required
           />

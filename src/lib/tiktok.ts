@@ -1,6 +1,7 @@
 import path from 'path';
 import os from 'os';
-import fs from 'fs';
+import { promises as fs } from 'fs';
+import { existsSync, mkdirSync, copyFileSync, chmodSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import ytdlp from 'youtube-dl-exec';
 import ffmpeg from 'fluent-ffmpeg';
@@ -12,8 +13,8 @@ ffmpeg.setFfmpegPath('/usr/local/bin/ffmpeg');
 
 // Create temp directory
 const TMP_DIR = path.join(os.tmpdir(), 'ugcv2');
-if (!fs.existsSync(TMP_DIR)) {
-  fs.mkdirSync(TMP_DIR, { recursive: true });
+if (!existsSync(TMP_DIR)) {
+  mkdirSync(TMP_DIR, { recursive: true });
 }
 
 // Helper function to create a unique filename
@@ -138,18 +139,18 @@ export const getPublicUrl = (filePath: string): string => {
     
     // Create the temp directory in public if it doesn't exist
     const publicTempDir = path.join(process.cwd(), 'public', 'temp');
-    if (!fs.existsSync(publicTempDir)) {
-      fs.mkdirSync(publicTempDir, { recursive: true });
+    if (!existsSync(publicTempDir)) {
+      mkdirSync(publicTempDir, { recursive: true });
     }
     
     const publicPath = path.join(publicTempDir, fileName);
     
     // Copy the file to the public directory
-    if (!fs.existsSync(publicPath)) {
-      fs.copyFileSync(filePath, publicPath);
+    if (!existsSync(publicPath)) {
+      copyFileSync(filePath, publicPath);
       
       // Set readable permissions
-      fs.chmodSync(publicPath, 0o644);
+      chmodSync(publicPath, 0o644);
     }
     
     return `/temp/${fileName}`;
