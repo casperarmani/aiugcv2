@@ -28,6 +28,10 @@
 /public/*
 !/public/*.svg
 
+# Explicitly ignore temp directory and its contents
+/public/temp/
+/public/temp/*
+
 # debug
 npm-debug.log*
 yarn-debug.log*
