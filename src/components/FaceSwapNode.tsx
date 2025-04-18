@@ -7,6 +7,7 @@ interface FaceSwapNodeProps {
   data: {
     inputData?: DownloaderOutput;
     onSuccess: (output: FaceSwapOutput) => void;
+    autoRun?: boolean;
   };
 }
 
