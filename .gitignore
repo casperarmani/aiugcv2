@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# public folder contents
+/public/*
+!/public/*.svg
+
 # debug
 npm-debug.log*
 yarn-debug.log*
