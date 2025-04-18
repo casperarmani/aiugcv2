@@ -36,8 +36,8 @@ export function KlingNode({ id, data }: KlingNodeProps) {
     try {
       // Make API call to generate videos
       const response = await axios.post('/api/kling', {
-        firstFrameUrl: data.inputData.swappedFrame0Url,
-        lastFrameUrl: data.inputData.swappedFrame5Url,
+        firstFramePath: data.inputData.swappedFrame0Path,
+        lastFramePath: data.inputData.swappedFrame5Path,
         prompt,
       });
       

@@ -254,6 +254,7 @@ export const generateKlingVideo = async (
   prompt: string
 ): Promise<string[]> => {
   try {
+    console.log('Preparing Kling task payload...');
     // Create 3 identical tasks for generating previews
     const taskPromises = Array(3).fill(null).map(() => {
       return createTask({
@@ -264,7 +265,8 @@ export const generateKlingVideo = async (
           image_url: firstFrameUrl,
           image_tail_url: lastFrameUrl,
           mode: 'pro',
-          version: '2.0',
+          version: '2.0', // Ensure version 2.0 is used
+          aspect_ratio: '16:9', // Set default aspect ratio
         },
         config: { 
           service_mode: 'public',
@@ -272,16 +274,30 @@ export const generateKlingVideo = async (
       });
     });
     
+    console.log('Creating Kling tasks...');
     const tasks = await Promise.all(taskPromises);
+    console.log('Created Kling task IDs:', tasks.map(task => task.task_id));
     
     // Poll all tasks for completion
-    const pollPromises = tasks.map(task => pollTask(task.id));
+    console.log('Polling for task completion...');
+    const pollPromises = tasks.map(task => pollTask(task.task_id, 5000, 180));
     const results = await Promise.all(pollPromises);
+    console.log('All Kling tasks completed!');
     
     // Extract video URLs
-    return results.map(result => result.output.video_url);
+    const videoUrls = results.map(result => {
+      if (result.output && result.output.video_url) {
+        return result.output.video_url;
+      } else {
+        console.error('Unexpected Kling output format:', result.output);
+        throw new Error('Could not find video_url in Kling task output');
+      }
+    });
+    
+    console.log('Extracted video URLs:', videoUrls);
+    return videoUrls;
   } catch (error) {
     console.error('Error in Kling video generation process:', error);
-    throw new Error('Failed to generate videos using Kling 2.0');
+    throw new Error(`Failed to generate videos using Kling 2.0: ${error.message}`);
   }
 };
