@@ -1,8 +1,10 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
+
+// Only import Node.js modules on the server side
+const fs = typeof window === 'undefined' ? require('fs/promises') : null;
+const path = typeof window === 'undefined' ? require('path') : null;
+const os = typeof window === 'undefined' ? require('os') : null;
 
 // PiAPI endpoints - Updated to latest URLs
 const API_BASE_URL = 'https://api.piapi.ai/api/v1'; // v1 API
@@ -157,8 +159,8 @@ export const pollTask = async (
 /**
  * Face swap function using PiAPI
  */
-// Define temp directory
-const TMP_DIR = path.join(os.tmpdir(), 'ugcv2');
+// Define temp directory (only on server side)
+const TMP_DIR = typeof window === 'undefined' ? path.join(os.tmpdir(), 'ugcv2') : null;
 
 // Helper function to ensure directory exists
 const ensureDirExists = async (dir: string): Promise<void> => {
@@ -246,58 +248,18 @@ export const faceSwap = async (targetImagePath: string, swapImageUrl: string): P
 };
 
 /**
- * Kling 2.0 video generation using PiAPI
+ * @deprecated Use the VideoGenerationService from video-generation.ts instead
+ * 
+ * Kling video generation using PiAPI
+ * This function is kept for backward compatibility but will be removed in future versions.
  */
 export const generateKlingVideo = async (
   firstFrameUrl: string,
   lastFrameUrl: string,
   prompt: string
 ): Promise<string[]> => {
-  try {
-    console.log('Preparing Kling task payload...');
-    // Create 3 identical tasks for generating previews
-    const taskPromises = Array(3).fill(null).map(() => {
-      return createTask({
-        model: 'kling',
-        task_type: 'video_generation', 
-        input: {
-          prompt: prompt,
-          image_url: firstFrameUrl,
-          image_tail_url: lastFrameUrl,
-          mode: 'pro',
-          version: '1.6', // Ensure version 1.6 is used
-          aspect_ratio: '16:9', // Set default aspect ratio
-        },
-        config: { 
-          service_mode: 'public',
-        },
-      });
-    });
-    
-    console.log('Creating Kling tasks...');
-    const tasks = await Promise.all(taskPromises);
-    console.log('Created Kling task IDs:', tasks.map(task => task.task_id));
-    
-    // Poll all tasks for completion
-    console.log('Polling for task completion...');
-    const pollPromises = tasks.map(task => pollTask(task.task_id, 5000, 180));
-    const results = await Promise.all(pollPromises);
-    console.log('All Kling tasks completed!');
-    
-    // Extract video URLs
-    const videoUrls = results.map(result => {
-      if (result.output && result.output.video_url) {
-        return result.output.video_url;
-      } else {
-        console.error('Unexpected Kling output format:', result.output);
-        throw new Error('Could not find video_url in Kling task output');
-      }
-    });
-    
-    console.log('Extracted video URLs:', videoUrls);
-    return videoUrls;
-  } catch (error) {
-    console.error('Error in Kling video generation process:', error);
-    throw new Error(`Failed to generate videos using Kling 2.0: ${error.message}`);
-  }
+  console.warn('Warning: generateKlingVideo is deprecated. Use VideoGenerationService instead.');
+  const { getVideoService } = require('./video-generation');
+  const videoService = getVideoService();
+  return videoService.generateVideo(firstFrameUrl, lastFrameUrl, prompt);
 };

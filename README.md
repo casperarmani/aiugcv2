@@ -4,7 +4,7 @@ A Next.js application that processes TikTok videos through a node-based workflow
 
 1. TikTok video downloading and frame extraction
 2. Face swapping using PiAPI
-3. Video generation with Kling 2.0 model
+3. Video generation with AI video models (Kling or Luma Dream Machine)
 4. TikTok video lip syncing with Syncio API
 
 ## Setup
@@ -49,7 +49,7 @@ The application provides a node-based interface with four main nodes:
 
 1. **TikTok Downloader**: Input a TikTok URL and extract frames
 2. **Face Swap**: Upload a face image to swap onto the extracted frames
-3. **Kling 2.0 Generator**: Generate videos from the face-swapped frames
+3. **Video Generator**: Generate videos from the face-swapped frames using AI models
 4. **Lip Sync**: Input a TikTok URL and audio URL to create a lip-synced video
 
 The first three nodes are connected in sequence, while the lip sync node operates independently.
@@ -63,8 +63,24 @@ The first three nodes are connected in sequence, while the lip sync node operate
 - PiAPI for face swapping and video generation
 - Syncio API for lip syncing
 
+## Video Generation Models
+
+You can choose between different AI video generation models:
+
+- **Kling**: Uses the Kling model for video generation with version 1.6
+- **Luma Dream Machine**: Uses Luma AI's Dream Machine model for high-quality video generation
+
+You can switch between models directly from the UI:
+
+1. In the Video Generator node, use the "Provider" dropdown to select either:
+   - **Kling**: Better for stylized and animated character videos
+   - **Luma AI**: Better for realistic and high-quality videos
+
+The provider selection persists only for the current session. The default provider is Kling.
+
 ## Notes
 
 - Temporary files are stored in `/tmp/ugcv2` and linked to the public folder
 - This is a development build and not intended for production use
 - API rate limits may apply depending on your PiAPI and Syncio subscriptions
+- Both Kling and Luma Dream Machine are accessed through PiAPI, requiring the same API key

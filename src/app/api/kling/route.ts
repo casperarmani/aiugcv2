@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateKlingVideo, uploadFile } from '@/lib/piapi'; // Import Kling function and uploader
+import { uploadFile } from '@/lib/piapi'; // Import uploader from piapi
+import { getVideoService } from '@/lib/video-generation'; // Import the video service factory
 import { getPublicUrl } from '@/lib/tiktok';
 import axios from 'axios';
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
@@ -66,11 +67,14 @@ export async function POST(request: NextRequest) {
     const piapiLastFrameUrl = await uploadFile(lastFramePath);
     console.log('Uploaded last frame, URL:', piapiLastFrameUrl);
 
-    // --- Step 2: Call the ACTUAL Kling generation function ---
-    // This function should handle task creation and polling internally
-    // It expects PiAPI ephemeral URLs as input. Ensure version: "1.6" is set inside generateKlingVideo.
-    console.log('Calling generateKlingVideo with PiAPI URLs...');
-    const piapiVideoUrls = await generateKlingVideo(
+    // --- Step 2: Get the video generation service and generate videos ---
+    // The service handles task creation and polling internally
+    // It expects PiAPI ephemeral URLs as input
+    console.log('Getting video generation service...');
+    const videoService = getVideoService();
+    
+    console.log('Calling video generation service with PiAPI URLs...');
+    const piapiVideoUrls = await videoService.generateVideo(
       piapiFirstFrameUrl,
       piapiLastFrameUrl,
       prompt

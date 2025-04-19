@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaceSwapOutput } from './FaceSwapNode';
+import { VideoProvider, setVideoProvider } from '@/lib/video-generation';
 
 interface KlingNodeProps {
   id: string;
@@ -21,6 +22,12 @@ export function KlingNode({ id, data }: KlingNodeProps) {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<{ videoUrls: string[] } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<number | null>(null);
+  const [videoProvider, setVideoProviderState] = useState<VideoProvider>('kling');
+  
+  // Update the global provider setting when the local state changes
+  useEffect(() => {
+    setVideoProvider(videoProvider);
+  }, [videoProvider]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +64,7 @@ export function KlingNode({ id, data }: KlingNodeProps) {
   const downloadVideo = (url: string, index: number) => {
     const link = document.createElement('a');
     link.href = url;
-    link.download = `kling-video-${index + 1}.mp4`;
+    link.download = `generated-video-${index + 1}.mp4`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -65,7 +72,21 @@ export function KlingNode({ id, data }: KlingNodeProps) {
 
   return (
     <div className="p-4 border rounded-lg bg-white shadow-md w-80 text-black">
-      <h3 className="text-lg font-semibold mb-2">Kling 1.6 Generator</h3>
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="text-lg font-semibold">Video Generator</h3>
+        <div className="flex items-center">
+          <label className="text-xs mr-1">Provider:</label>
+          <select 
+            value={videoProvider}
+            onChange={(e) => setVideoProviderState(e.target.value as VideoProvider)}
+            className="text-xs p-1 border rounded bg-white text-black"
+            disabled={loading}
+          >
+            <option value="kling">Kling</option>
+            <option value="luma">Luma AI</option>
+          </select>
+        </div>
+      </div>
       
       {data.inputData ? (
         <div className="mb-4">
@@ -99,6 +120,17 @@ export function KlingNode({ id, data }: KlingNodeProps) {
         </div>
       )}
       
+      <div className="mb-2 p-2 bg-blue-50 rounded text-xs">
+        <div className="font-medium text-blue-700">
+          {videoProvider === 'kling' ? 'Using Kling 1.6' : 'Using Luma Dream Machine'}
+        </div>
+        <div className="text-blue-600 mt-1">
+          {videoProvider === 'kling' 
+            ? 'Good for character animations and stylized videos' 
+            : 'Good for realistic videos with high visual quality'}
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-2">
           <label className="block text-sm font-medium mb-1">
@@ -107,7 +139,9 @@ export function KlingNode({ id, data }: KlingNodeProps) {
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Enter a detailed prompt..."
+            placeholder={videoProvider === 'kling' 
+              ? "E.g., animated character dancing in a forest, 3D style" 
+              : "E.g., person walking through a futuristic city with neon lights"}
             className="w-full p-2 border rounded text-sm text-black"
             rows={3}
             required
@@ -119,7 +153,7 @@ export function KlingNode({ id, data }: KlingNodeProps) {
           disabled={loading || !data.inputData}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded text-sm disabled:opacity-50"
         >
-          {loading ? 'Generating...' : 'Generate Videos'}
+          {loading ? 'Generating...' : `Generate with ${videoProvider === 'kling' ? 'Kling' : 'Luma AI'}`}
         </button>
       </form>
       

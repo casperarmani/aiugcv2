@@ -1,28 +1,37 @@
-import path from 'path';
-import os from 'os';
-import { promises as fs } from 'fs';
-import { existsSync, mkdirSync, copyFileSync, chmodSync } from 'fs';
+// Server-side only imports
 import { v4 as uuidv4 } from 'uuid';
-import ytdlp from 'youtube-dl-exec';
-import ffmpeg from 'fluent-ffmpeg';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 
-// Use system ffmpeg instead of the npm package
-ffmpeg.setFfmpegPath('/usr/local/bin/ffmpeg');
+// Dynamically import Node.js modules on the server side only
+const path = typeof window === 'undefined' ? require('path') : null;
+const os = typeof window === 'undefined' ? require('os') : null;
+const fs = typeof window === 'undefined' ? require('fs/promises') : null;
+const { existsSync, mkdirSync, copyFileSync, chmodSync } = typeof window === 'undefined' ? require('fs') : { existsSync: null, mkdirSync: null, copyFileSync: null, chmodSync: null };
+const ytdlp = typeof window === 'undefined' ? require('youtube-dl-exec') : null;
+const ffmpeg = typeof window === 'undefined' ? require('fluent-ffmpeg') : null;
+const { exec } = typeof window === 'undefined' ? require('child_process') : { exec: null };
+const { promisify } = typeof window === 'undefined' ? require('util') : { promisify: null };
 
-// Create temp directory
-const TMP_DIR = path.join(os.tmpdir(), 'ugcv2');
-if (!existsSync(TMP_DIR)) {
-  mkdirSync(TMP_DIR, { recursive: true });
+// Server-side only initialization
+if (typeof window === 'undefined') {
+  // Use system ffmpeg instead of the npm package
+  ffmpeg.setFfmpegPath('/usr/local/bin/ffmpeg');
+
+  // Create temp directory
+  const TMP_DIR = path.join(os.tmpdir(), 'ugcv2');
+  if (!existsSync(TMP_DIR)) {
+    mkdirSync(TMP_DIR, { recursive: true });
+  }
 }
+
+// Define temp directory
+const TMP_DIR = typeof window === 'undefined' ? path.join(os.tmpdir(), 'ugcv2') : '';
 
 // Helper function to create a unique filename
 const createTempFilename = (extension: string): string => {
   return path.join(TMP_DIR, `${uuidv4()}.${extension}`);
 };
 
-const execAsync = promisify(exec);
+const execAsync = typeof window === 'undefined' ? promisify(exec) : null;
 
 /**
  * Downloads a TikTok video and returns the file path
