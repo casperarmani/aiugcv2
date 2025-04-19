@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
 
     // --- Step 2: Call the ACTUAL Kling generation function ---
     // This function should handle task creation and polling internally
-    // It expects PiAPI ephemeral URLs as input. Ensure version: "2.0" is set inside generateKlingVideo.
+    // It expects PiAPI ephemeral URLs as input. Ensure version: "1.6" is set inside generateKlingVideo.
     console.log('Calling generateKlingVideo with PiAPI URLs...');
     const piapiVideoUrls = await generateKlingVideo(
       piapiFirstFrameUrl,

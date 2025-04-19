@@ -265,7 +265,7 @@ export const generateKlingVideo = async (
           image_url: firstFrameUrl,
           image_tail_url: lastFrameUrl,
           mode: 'pro',
-          version: '2.0', // Ensure version 2.0 is used
+          version: '1.6', // Ensure version 1.6 is used
           aspect_ratio: '16:9', // Set default aspect ratio
         },
         config: { 
