@@ -18,7 +18,7 @@ export interface FaceSwapOutput {
 }
 
 export function FaceSwapNode({ id, data }: FaceSwapNodeProps) {
-  const [swapImageUrl, setSwapImageUrl] = useState('https://cdn.discordapp.com/attachments/1109371168147914752/1362909894948294856/winner_5.jpeg?ex=68041c40&is=6802cac0&hm=0ed09618014a78d941567622d1b0c9f4b137141ec07fdcb87eba44318bcbb0cf&');
+  const [swapImageUrl, setSwapImageUrl] = useState('https://iili.io/3ENosIe.md.jpg');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<{ swappedFrameUrls: string[] } | null>(null);
