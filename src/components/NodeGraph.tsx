@@ -15,6 +15,7 @@ import { DownloaderNode, DownloaderOutput } from './nodes/DownloaderNode';
 import { FaceSwapNode, FaceSwapOutput } from './nodes/FaceSwapNode';
 import { KlingNode, KlingOutput } from './nodes/KlingNode';
 import { LipSyncNode } from './nodes/LipSyncNode';
+import { ManualFrameSwapNode } from './nodes/ManualFrameSwapNode';
 
 // Define custom node types
 const nodeTypes: NodeTypes = {
@@ -22,6 +23,7 @@ const nodeTypes: NodeTypes = {
   faceSwapNode: FaceSwapNode,
   klingNode: KlingNode,
   lipSyncNode: LipSyncNode,
+  manualFrameSwapNode: ManualFrameSwapNode,
 };
 
 // Initial nodes
@@ -48,6 +50,12 @@ const initialNodes: Node[] = [
     id: 'lipSync',
     type: 'lipSyncNode',
     position: { x: 900, y: 250 }, // Moved to the side
+    data: { onSuccess: () => {} }, // Will be overwritten
+  },
+  {
+    id: 'manualFrameSwap',
+    type: 'manualFrameSwapNode',
+    position: { x: 0, y: 400 }, // Positioned far below the main flow
     data: { onSuccess: () => {} }, // Will be overwritten
   },
 ];
@@ -137,6 +145,14 @@ export default function NodeGraph() {
             },
           };
         } else if (node.id === 'lipSync') {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              onSuccess: () => {},
+            },
+          };
+        } else if (node.id === 'manualFrameSwap') {
           return {
             ...node,
             data: {
