@@ -71,15 +71,15 @@ export function KlingNode({ id, data }: KlingNodeProps) {
   };
 
   return (
-    <div className="p-4 border rounded-lg bg-white shadow-md w-80 text-black">
+    <div className="p-4 border rounded-lg bg-white shadow-md w-[640px] h-[960px] overflow-auto text-black">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-semibold">Video Generator</h3>
+        <h3 className="text-xl font-semibold">Video Generator</h3>
         <div className="flex items-center">
-          <label className="text-xs mr-1">Provider:</label>
+          <label className="text-sm mr-1">Provider:</label>
           <select 
             value={videoProvider}
             onChange={(e) => setVideoProviderState(e.target.value as VideoProvider)}
-            className="text-xs p-1 border rounded bg-white text-black"
+            className="text-sm p-1 border rounded bg-white text-black"
             disabled={loading}
           >
             <option value="kling">Kling</option>

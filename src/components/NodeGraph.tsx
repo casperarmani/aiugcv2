@@ -49,7 +49,7 @@ const initialNodes: Node[] = [
   {
     id: 'lipSync',
     type: 'lipSyncNode',
-    position: { x: 900, y: 250 }, // Moved to the side
+    position: { x: 2000, y: 800 }, // Moved extremely far away from main flow
     data: { onSuccess: () => {} }, // Will be overwritten
   },
   {
