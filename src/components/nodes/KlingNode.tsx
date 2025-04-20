@@ -71,7 +71,7 @@ export function KlingNode({ id, data }: KlingNodeProps) {
   };
 
   return (
-    <div className="p-4 border rounded-lg bg-white shadow-md w-[640px] h-[960px] overflow-auto text-black">
+    <div className="p-4 border rounded-lg bg-white shadow-md w-[640px] text-black">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-xl font-semibold">Video Generator</h3>
         <div className="flex items-center">
@@ -165,12 +165,12 @@ export function KlingNode({ id, data }: KlingNodeProps) {
       
       {preview && (
         <div className="mt-4">
-          <h4 className="text-sm font-medium mb-2">Generated Videos</h4>
-          <div className="grid grid-cols-3 gap-2">
+          <h4 className="text-lg font-medium mb-4">Generated Videos</h4>
+          <div className="grid grid-cols-3 gap-4">
             {preview.videoUrls.map((url, index) => (
               <div 
                 key={index} 
-                className={`border rounded overflow-hidden ${selectedVideo === index ? 'ring-2 ring-blue-500' : ''}`}
+                className={`border rounded overflow-hidden ${selectedVideo === index ? 'ring-4 ring-blue-500' : ''}`}
                 onClick={() => setSelectedVideo(index)}
               >
                 <video 
@@ -178,11 +178,14 @@ export function KlingNode({ id, data }: KlingNodeProps) {
                   controls
                   className="w-full h-auto"
                 />
-                <div className="flex justify-between items-center px-1 py-1">
-                  <span className="text-xs">Version {index + 1}</span>
+                <div className="flex justify-between items-center px-3 py-2">
+                  <span className="text-base">Version {index + 1}</span>
                   <button
-                    className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded"
-                    onClick={() => downloadVideo(url, index)}
+                    className="text-base bg-blue-500 text-white px-4 py-1 rounded"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      downloadVideo(url, index);
+                    }}
                   >
                     Download
                   </button>
